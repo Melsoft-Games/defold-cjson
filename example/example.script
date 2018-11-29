@@ -1,0 +1,14 @@
+function init(self)
+	local simple_json = '{"5":2,"o":{"a":5,"b":"test"},"string_val":"some val"}'
+
+	local parsed = cjson.decode(simple_json)
+
+
+	print("Start json:", simple_json)
+	
+	print("Parsed")
+	pprint(parsed)
+
+	print("Encoded back")
+	pprint(cjson.encode(parsed))
+end
