@@ -11,4 +11,47 @@ function init(self)
 
 	print("Encoded back")
 	pprint(cjson.encode(parsed))
+
+	local luat = {
+		[5] = "value",
+		text = "text value",
+		["btext"] = 5
+	}
+	local luat_string = cjson.encode(luat)
+
+
+	local small_json = sys.load_resource("/resources/small.json")
+	local medium_json = sys.load_resource("/resources/medium.json")
+	local big_json = sys.load_resource("/resources/big.json")
+
+	local small_lua = cjson.decode(small_json)
+	local medium_lua = cjson.decode(medium_json)
+	local big_lua = cjson.decode(big_json)
+
+	print("SMALL JSON")
+	pprint(small_json)
+	local t = socket.gettime()
+	cjson.decode(small_json)
+	print("CJSON decode", socket.gettime() - t)
+	t = socket.gettime()
+	cjson.encode(small_lua)
+	print("CJSON encode", socket.gettime() - t)
+
+
+	print("MEDIUM JSON")
+	t = socket.gettime()
+	cjson.decode(medium_json)
+	print("CJSON decode", socket.gettime() - t)
+	t = socket.gettime()
+	cjson.encode(medium_lua)
+	print("CJSON encode", socket.gettime() - t)
+
+
+	print("BIG JSON")
+	t = socket.gettime()
+	cjson.decode(big_json)
+	print("CJSON decode", socket.gettime() - t)
+	t = socket.gettime()
+	cjson.encode(big_lua)
+	print("CJSON encode", socket.gettime() - t)
 end

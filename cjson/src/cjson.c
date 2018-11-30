@@ -157,8 +157,8 @@ static json_config_t *cfg;
 
 static json_config_t *json_fetch_config(lua_State *l)
 {
-    //json_config_t *cfg;
-    //cfg = (json_config_t*)lua_touserdata(l, lua_upvalueindex(1));
+    // json_config_t *cfg;
+    cfg = (json_config_t*)lua_touserdata(l, lua_upvalueindex(1));
     if (!cfg)
         luaL_error(l, "BUG: Unable to fetch CJSON configuration");
     return cfg;
@@ -286,8 +286,8 @@ static int json_cfg_decode_invalid_numbers(lua_State *l)
 // ++++
 static int json_destroy_config(lua_State *l)
 {
-    json_config_t *cfg;
-    cfg = (json_config_t*)lua_touserdata(l, 1);
+    // json_config_t *cfg;
+    // cfg = (json_config_t*)lua_touserdata(l, 1);
     if (cfg)
         strbuf_free(&cfg->encode_buf);
     cfg = NULL;
@@ -297,7 +297,7 @@ static int json_destroy_config(lua_State *l)
 // ++++
 static void json_create_config(lua_State *l)
 {
-    //json_config_t *cfg;
+    // json_config_t *cfg;
     int i;
     cfg = (json_config_t*)lua_newuserdata(l, sizeof(*cfg));
 
@@ -991,26 +991,29 @@ static int json_protect_conversion(lua_State *l)
 }
 
 
-static const luaL_reg Module_methods[] = 
-{
-    { "encode", json_encode },
-    { "decode", json_decode },
-    { 0, 0 }
-};
-
-
 static int lua_cjson_new(lua_State *l)
 {
     int top = lua_gettop(l);
 
-    luaL_register(l, CJSON_MODNAME, Module_methods);
+    luaL_Reg reg[] =
+    {
+        { "encode", json_encode },
+        { "decode", json_decode },
+        { NULL, NULL }
+    };
+    // create table
+    lua_newtable(l);
 
-    // it is create new value
     json_create_config(l);
-    lua_pop(l, 1);
 
-    // pop the registered table
-    lua_pop(l, 1);
+    // fill with funcs
+    luaL_setfuncs(l, reg, 1); 
+    lua_pushlightuserdata(l, NULL);
+    lua_setfield(l, -2, "null");
+
+    // pop the created table
+    lua_setglobal(l, CJSON_MODNAME);
+
     assert(top == lua_gettop(l));
     return 0;
 }

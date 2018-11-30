@@ -10,7 +10,7 @@ height = 640
 
 [project]
 title = CJson
+custom_resources = resources/
 
 [library]
 include_dirs = cjson
-
