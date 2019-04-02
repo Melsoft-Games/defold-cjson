@@ -34,6 +34,7 @@ return parsed lua_table
 ## Benchmark
 **rxlua** - pure lua JSON encode/decode [implementation](https://github.com/rxi/json.lua)
 time in ms
+
 | Json: | 4KB | 971KB | 1.8MB |
 | -- | -- | -- | -- |
 | defold decode  |  0  		|  0.032  	|  0.075  |
