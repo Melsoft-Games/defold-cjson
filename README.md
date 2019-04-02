@@ -43,7 +43,7 @@ time in ms
 | defold decode  |  0  		|  0.032  	|  0.075  |
 |  -- 			 |  --  	| --   		| --		|
 |  rxlua encode  |  0  		|  0.0734  	|  0.148  |
-|  rxlua decode  |  0.0003  |  0.308  	|  0.051  |
+|  rxlua decode  |  0.0003  |  0.0308  	|  0.051  |
 |  -- 			 |  --  	| --   		| --		|
 |  cjson encode  |  0  		|  0.0057  	|  0.0122  |
 |  cjson decode  |  0  		|  0.0066  	|  0.0117  |
