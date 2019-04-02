@@ -30,6 +30,8 @@ return encoded lua table to json string
 #### `cjson.decode(valid_json)`
 return parsed lua_table 
 
+**Note**: *json must be valid, or cjson will throw error. You can wrap it with pcall, or change extension and call cjson safe_decode from lua-cjson lib*
+
 
 ## Benchmark
 **rxlua** - pure lua JSON encode/decode [implementation](https://github.com/rxi/json.lua)
