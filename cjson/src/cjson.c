@@ -7,6 +7,7 @@
     #define strcasecmp _stricmp
 #endif
 
+#include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include <math.h>
@@ -572,6 +573,19 @@ static void json_append_data(lua_State *l, json_config_t *cfg, int current_depth
         case LUA_TNIL:
             strbuf_append_mem(json, "null", 4);
             break;
+        case LUA_TUSERDATA:
+        case LUA_TFUNCTION:
+        case LUA_TTHREAD:
+            {
+                unsigned long long pointer_addr = (unsigned long long)lua_topointer(l, -1);
+                const int buff_size = 16;
+                char str_buffer[buff_size];
+                int len = snprintf(str_buffer, buff_size, "%llx", pointer_addr);
+                strbuf_append_mem(json, "\"object at 0x", 13);
+                strbuf_append_mem(json, str_buffer, len);
+                strbuf_append_mem(json, "\"", 1);
+                break;
+            }
         case LUA_TLIGHTUSERDATA:
             if (lua_touserdata(l, -1) == NULL)
             {
@@ -579,8 +593,7 @@ static void json_append_data(lua_State *l, json_config_t *cfg, int current_depth
                 break;
             }
         default:
-            /* Remaining types (LUA_TFUNCTION, LUA_TUSERDATA, LUA_TTHREAD,
-             * and LUA_TLIGHTUSERDATA) cannot be serialised */
+            /* Remaining types (LUA_TLIGHTUSERDATA) cannot be serialised */
             json_encode_exception(l, cfg, json, -1, "type not supported");
             /* never returns */
     }
@@ -877,7 +890,7 @@ static void json_decode_descend(lua_State *l, json_parse_t *json, int slots)
         return;
     }
     strbuf_free(json->tmp);
-    luaL_error(l, "Found too many nested data structures (%d) at character %d", json->current_depth, json->ptr - json->data);
+    luaL_error(l, "Found too many nested data structures (%d) at character %ld", json->current_depth, json->ptr - json->data);
 }
 
 static void json_parse_object_context(lua_State *l, json_parse_t *json)
